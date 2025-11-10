@@ -20,12 +20,12 @@ class _LoginScreenState extends State<LoginScreen> {
   static const String _adminEmail = 'admin@example.com';
   static const String _adminPassword = 'admin123';
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _emailController.text = _adminEmail;
-  //   _passwordController.text = _adminPassword;
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _emailController.text = _adminEmail;
+    _passwordController.text = _adminPassword;
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -20,7 +20,7 @@ class UserRepository {
         password: password,
       );
     } catch (e) {
-      print("⚠ Error creating Firebase user: $e");
+      print("Error creating Firebase user: $e");
     }
 
     // Return password back to UI

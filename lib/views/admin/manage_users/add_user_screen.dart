@@ -101,9 +101,9 @@ class _AddUserScreenState extends State<AddUserScreen> {
 
                           final user = UserModel(
                             id: DateTime.now().millisecondsSinceEpoch.toString(),
-                            email: _emailController.text.trim(),
+                            email: _emailController.text,
                             role: _role,
-                            name: _nameController.text.trim(),
+                            name: _nameController.text,
                           );
 
                           final String password = await UserRepository()
@@ -118,10 +118,10 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
-                      child: const Text("Submit", style: TextStyle(fontSize: 16, color: Colors.white)),
+                      child: const Text("Submit", style: TextStyle(fontSize: 16, color: Colors.black)),
                     ),
                   ),
                 ],
