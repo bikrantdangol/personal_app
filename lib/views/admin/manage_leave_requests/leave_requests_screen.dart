@@ -1,4 +1,3 @@
-// ... existing imports
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:personal_app/core/constants/app_strings.dart';
@@ -14,8 +13,7 @@ class LeaveRequestsScreen extends StatelessWidget {
     adminVM.loadLeaveRequests();
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppStrings.leaveRequests)),  // Remove const
-      // ... rest of the code remains the same
+      appBar: AppBar(title: Text(AppStrings.leaveRequests)),
     );
   }
 }

@@ -35,7 +35,6 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                 decoration: const InputDecoration(labelText: 'Reason'),
                 validator: (value) => value!.isEmpty ? 'Reason required' : null,
               ),
-              // Add date pickers for start/end
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
