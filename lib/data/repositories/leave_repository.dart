@@ -6,7 +6,7 @@ class LeaveRepository {
   final ApiService _apiService = ApiService();
 
   Future<void> submitLeave(LeaveModel leave) async {
-    await _apiService.setDocument(ApiEndpoints.leavesCollection, leave.id, leave.toMap());
+    await _apiService.setDocument(ApiEndpoints.leavesCollection, leave.userId, leave.toMap());
   }
 
   Stream<List<LeaveModel>> getLeaves(String userId) {

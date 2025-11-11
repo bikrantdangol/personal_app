@@ -89,7 +89,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
         child: Column(
           children: [
             const CalendarWidget(),
-           // const LeaveBalanceWidget(),
+            //const LeaveBalanceWidget(),
             const DailyLoginReportWidget(),
             const SizedBox(height: 12),
             ElevatedButton(
@@ -98,6 +98,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
               },
               child: const Text('Request Leave'),
             ),
+            
           ],
         ),
       ),
