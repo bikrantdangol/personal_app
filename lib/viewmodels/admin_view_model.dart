@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../data/models/user_model.dart';
 import '../data/models/leave_model.dart';
@@ -13,19 +14,46 @@ class AdminViewModel extends ChangeNotifier {
   List<UserModel> get users => _users;
   List<LeaveModel> get leaveRequests => _leaveRequests;
 
+  bool isLoading = false;
+
+   Future<void> fetchUsers() async {
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      final QuerySnapshot snapshot = await _userRepo.listAllUsers("users");
+      _users = snapshot.docs
+          .map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print("Error fetching users: $e");
+    }
+
+    isLoading = false;
+    notifyListeners();
+  }
+
   Future<void> loadUsers() async {
-    // Load all users (in real app, paginate)
-    // For simplicity, assume fetching from Firestore
+
     notifyListeners();
   }
 
   Future<void> loadLeaveRequests() async {
-    // Load pending leaves
     notifyListeners();
   }
 
   Future<void> approveLeave(String id) async {
     await _leaveRepo.updateLeaveStatus(id, 'approved');
     loadLeaveRequests();
+  }
+
+  
+  Future<bool> login(String email, String password) async {
+    isLoading = true;
+    notifyListeners();
+    final user = await _userRepo.loginUser(email, password);
+    isLoading = false;
+    notifyListeners();
+    return user != null;
   }
 }

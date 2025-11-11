@@ -18,4 +18,22 @@ class ApiService {
   Stream<QuerySnapshot> getCollectionStream(String collection) {
     return _firestore.collection(collection).snapshots();
   }
+   Future<QuerySnapshot> getAllDocuments(String collectionPath) async {
+    try {
+      return await _firestore.collection(collectionPath).get();
+    } catch (e) {
+      throw Exception("Failed to fetch users: $e");
+    }
+  }
+
+
+  // Future<QuerySnapshot> loginCredients( String email , String password) async {
+  //   try{
+  //     _firestore.
+
+
+  //   }catch (e){
+  //     throw Exception("There is error in Authentication");
+  //   }
+  // }
 }

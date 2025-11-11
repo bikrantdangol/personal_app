@@ -109,9 +109,9 @@ class _AddUserScreenState extends State<AddUserScreen> {
                           final String password = await UserRepository()
                               .addUser(user, _passwordController.text.trim());
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("User Added\nPassword: $password")),
-                          );
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(content: Text("User Added\nPassword: $password")),
+                          // );
 
                           //  Navigate to Admin Dashboard
                           Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);

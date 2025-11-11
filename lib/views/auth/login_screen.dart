@@ -16,15 +16,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  // Admin credentials
-  static const String _adminEmail = 'admin@example.com';
-  static const String _adminPassword = 'admin123';
-
   @override
   void initState() {
     super.initState();
-    _emailController.text = _adminEmail;
-    _passwordController.text = _adminPassword;
   }
 
   @override
@@ -103,64 +97,32 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 
                 const SizedBox(height: 25),
-
-      //           SizedBox(
-      //             width: double.infinity,
-      //             height: 45,
-      //             child: ElevatedButton(
-      //               onPressed: authVM.isLoading
-      //                   ? null
-      // : () async {
-      //     if (_formKey.currentState!.validate()) {
-      //       final email = _emailController.text.trim();
-      //       final password = _passwordController.text.trim();
-
-      //       try {
-      //         print("Credentials: $email, $password");
-
-      //         // Check for admin credentials
-      //         if (email == _adminEmail && password == _adminPassword) {
-      //           Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
-      //           return; // Stop here so it doesn't continue to user login
-      //         }
-
-      //         // Regular user login
-      //         await authVM.login(email, password);
-      //         Navigator.pushReplacementNamed(context, AppRoutes.userDashboard);
-      //       } catch (e) {
-      //         ScaffoldMessenger.of(context).showSnackBar(
-      //           SnackBar(content: Text(e.toString())),
-      //         );
-      //       }
-      //     }
-      //   },
-      //               style: ElevatedButton.styleFrom(
-      //                 backgroundColor: Colors.orangeAccent,
-      //                 shape: RoundedRectangleBorder(
-      //                   borderRadius: BorderRadius.circular(6),
-      //                 ),
-      //               ),
-      //               child: authVM.isLoading
-      //                   ? const CircularProgressIndicator(color: Colors.white)
-      //                   : const Text("Login", style: TextStyle(fontSize: 16)),
-      //             ),
-      //           ),
       
 SizedBox(
   width: double.infinity,
   height: 45,
   child: ElevatedButton(
-    onPressed: () {
-      // Check static admin credentials directly
-      if (_emailController.text.trim() == _adminEmail &&
-          _passwordController.text.trim() == _adminPassword) {
-        Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
-       
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Invalid credentials")),
-        );
+    onPressed: () async {
+      try{
+       await   authVM.login(_emailController.text.trim(), _passwordController.text.trim());
+       if(authVM.user != null &&   authVM.user?.email == "dangolbikrant3@gmail.com"){
+        Navigator.pushReplacementNamed(context, '/adminDashboard');
+       }
+    else if (authVM.role != null && authVM.role == 'user') {
+      Navigator.pushReplacementNamed(context, '/userDashboard');
+    } else if(authVM.role != null && authVM.role == 'admin' ){
+     Navigator.pushReplacementNamed(context, '/adminDashboard');
+    }
+     else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Login failed!")),
+      );
+    }
+
+      }catch (e){
+        ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text("Error: $e")),);
       }
+    
     },
     style: ElevatedButton.styleFrom(
       backgroundColor: Colors.white,
@@ -168,13 +130,12 @@ SizedBox(
         borderRadius: BorderRadius.circular(6),
       ),
     ),
-    child: const Text(
-      "Login",
+    child:  Text(
+     authVM.isLoading ? "Loading..."  :  "Login",
       style: TextStyle(fontSize: 16, color: Colors.black),
     ),
   ),
 ),
-
                 const SizedBox(height: 40),
               ],
             ),
