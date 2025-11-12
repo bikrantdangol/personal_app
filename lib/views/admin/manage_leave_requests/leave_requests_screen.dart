@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:personal_app/data/models/leave_model.dart';
-import 'package:personal_app/core/services/local_storage_service.dart';
 import 'package:personal_app/viewmodels/admin_view_model.dart';
 import 'package:personal_app/viewmodels/leave_view_model.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +12,21 @@ class LeaveRequestsScreen extends StatefulWidget {
 }
 
 class _LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
+void deleteLeave(LeaveModel leave) async {
+  final vm = Provider.of<LeaveViewModel>(context, listen: false);
+
+  try {
+    await vm.deleteLeave(leave);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Leave deleted successfully")),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Error deleting leave: $e")),
+    );
+  }
+}
+
   void approveLeave(LeaveModel leave) async {
     final vm = Provider.of<LeaveViewModel>(context, listen: false);
     await vm.updateLeaveStatus(leave.userId, 'approved');
@@ -43,6 +57,7 @@ void initState() {
     final vm = Provider.of<AdminViewModel>(context);
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 2, 68, 150),
       appBar: AppBar(
         title: const Text("Leave Requests"),
       ),
@@ -91,7 +106,6 @@ void initState() {
                     ),
                   ),
 
-                  // Right side buttons
                   if(leave.leave.status == "pending")
                   Column(
                     children: [
@@ -115,7 +129,36 @@ void initState() {
                     ],
                   ),
                    if(leave.leave.status != "pending")
-                   Container(child: Text("Reviewed"),)
+                   Column(
+                     children: [
+                       Container(
+                        alignment: Alignment.center,
+                        height: 60,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Text(
+                         "Reviewed",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                         ),
+                     const SizedBox(height: 6),
+                      ElevatedButton(
+                        onPressed: () => deleteLeave(leave.leave),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          minimumSize: const Size(70, 36),
+                        ),
+                        child: const Text("Delete"),
+                      ),
+
+                     ],
+                   ),
                 ],
               ),
             ),

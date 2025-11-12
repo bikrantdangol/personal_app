@@ -14,6 +14,10 @@ class LeaveViewModel extends ChangeNotifier {
   Future<void> submitLeave(LeaveModel leave) async {
     await _leaveRepo.submitLeave(leave);
   }
+  
+  Future<void> deleteLeave(LeaveModel leave) async {
+    await _leaveRepo.deleteLeaveByUserId(leave.userId);
+  }
 
   
     Stream<List<LeaveModel>> getLeaves(String userId) {
