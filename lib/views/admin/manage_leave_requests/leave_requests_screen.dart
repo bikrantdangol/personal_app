@@ -1,39 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:personal_app/data/models/leave_model.dart';
+import 'package:personal_app/core/services/local_storage_service.dart';
+import 'package:personal_app/viewmodels/admin_view_model.dart';
+import 'package:personal_app/viewmodels/leave_view_model.dart';
+import 'package:provider/provider.dart';
 
 class LeaveRequestsScreen extends StatefulWidget {
   const LeaveRequestsScreen({super.key});
 
   @override
-  State<LeaveRequestsScreen> createState() => _LeaveListScreenState();
+  State<LeaveRequestsScreen> createState() => _LeaveRequestsScreenState();
 }
 
-class _LeaveListScreenState extends State<LeaveRequestsScreen> {
-  // Sample Data
-  List<LeaveModel> leaves = [
-    // data
-  ];
-
-  // Action Handlers (currently empty actions)
-  void approveLeave(LeaveModel leave) {
-    print("Approved: ${leave.id}");
+class _LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
+  void approveLeave(LeaveModel leave) async {
+    final vm = Provider.of<LeaveViewModel>(context, listen: false);
+    await vm.updateLeaveStatus(leave.userId, 'approved');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Leave Approved")),
+    );
   }
 
-  void rejectLeave(LeaveModel leave) {
-    print("Rejected: ${leave.id}");
-  }
+  void rejectLeave(LeaveModel leave) async {
+    final vm = Provider.of<LeaveViewModel>(context, listen: false);
+    await vm.updateLeaveStatus(leave.userId, 'rejected');
+    ScaffoldMessenger.of(context).showSnackBar(
+     const SnackBar(content: Text("Leave Rejected")),
+  );
+}
+   
+ @override
+void initState() {
+  super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    Provider.of<AdminViewModel>(context, listen: false).loadLeaveRequests();
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
+    final vm = Provider.of<AdminViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Leave Requests"),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(12),
-        itemCount: leaves.length,
+        itemCount: vm.leaveRequests.length,
         itemBuilder: (context, index) {
-          final leave = leaves[index];
+          final leave = vm.leaveRequests[index];
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
             elevation: 3,
@@ -45,28 +62,27 @@ class _LeaveListScreenState extends State<LeaveRequestsScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Left side leave information
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "User ID: ${leave.userId}",
+                          "User Name: ${leave.user.name}",
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 6),
-                        Text("From: ${leave.startDate.toString().split(' ')[0]}"),
-                        Text("To:   ${leave.endDate.toString().split(' ')[0]}"),
+                        Text("From: ${leave.leave.startDate.toString().split(' ')[0]}"),
+                        Text("To:   ${leave.leave.endDate.toString().split(' ')[0]}"),
                         const SizedBox(height: 6),
-                        Text("Reason: ${leave.reason}"),
+                        Text("Reason: ${leave.leave.reason}"),
                         const SizedBox(height: 6),
                         Text(
-                          "Status: ${leave.status.toUpperCase()}",
+                          "Status: ${leave.leave.status.toUpperCase()}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: leave.status == "approved"
+                            color: leave.leave.status == "approved"
                                 ? Colors.green
-                                : leave.status == "rejected"
+                                : leave.leave.status == "rejected"
                                     ? Colors.red
                                     : Colors.orange,
                           ),
@@ -76,10 +92,11 @@ class _LeaveListScreenState extends State<LeaveRequestsScreen> {
                   ),
 
                   // Right side buttons
+                  if(leave.leave.status == "pending")
                   Column(
                     children: [
                       ElevatedButton(
-                        onPressed: () => approveLeave(leave),
+                        onPressed: () => approveLeave(leave.leave),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           minimumSize: const Size(70, 36),
@@ -88,7 +105,7 @@ class _LeaveListScreenState extends State<LeaveRequestsScreen> {
                       ),
                       const SizedBox(height: 6),
                       ElevatedButton(
-                        onPressed: () => rejectLeave(leave),
+                        onPressed: () => rejectLeave(leave.leave),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                           minimumSize: const Size(70, 36),
@@ -97,6 +114,8 @@ class _LeaveListScreenState extends State<LeaveRequestsScreen> {
                       ),
                     ],
                   ),
+                   if(leave.leave.status != "pending")
+                   Container(child: Text("Reviewed"),)
                 ],
               ),
             ),

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../models/leave_model.dart';
 import '../../core/services/api_service.dart';
 import '../../core/constants/api_endpoints.dart';
@@ -16,8 +18,18 @@ class LeaveRepository {
             .map((doc) => LeaveModel.fromMap(doc.data() as Map<String, dynamic>))
             .toList());
   }
+    Stream<List<LeaveModel>> getLeavesStream() {
+    return _apiService
+        .getCollectionStream("leaves") 
+        .map((snapshot) => snapshot.docs
+            .map((doc) => LeaveModel.fromMap(doc.data() as Map<String, dynamic>))
+            .toList());
+  }
 
-  Future<void> updateLeaveStatus(String id, String status) async {
-    await _apiService.updateDocument(ApiEndpoints.leavesCollection, id, {'status': status});
+  Future<void> updateLeaveStatus(String leaveId, String status) async {
+    await FirebaseFirestore.instance
+      .collection('leaves')
+      .doc(leaveId)
+      .update({'status': status});
   }
 }

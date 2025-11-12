@@ -29,6 +29,7 @@ TextEditingController _finaldateController = TextEditingController();
     final vm = Provider.of<LeaveViewModel>(context);
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 2, 68, 150),
       appBar: AppBar(title: const Text('Request Leave')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -45,16 +46,16 @@ TextEditingController _finaldateController = TextEditingController();
                     stream: vm.getLeaves(snapshotdata.data ?? ''),
                     builder: (context, asyncSnapshot) {
                         if (!asyncSnapshot.hasData || asyncSnapshot.data!.isEmpty) {
-          return const SizedBox.shrink();
-        }
-         final leaves = asyncSnapshot.data!;
+                        return const SizedBox.shrink();
+                      }
+                      final leaves = asyncSnapshot.data!;
                       return ListView.builder(
                           shrinkWrap: true,        
-  physics: const NeverScrollableScrollPhysics(), 
-                        itemCount: leaves.length,
-                        itemBuilder: (context, index) {
-                          final leave = leaves[index];
-                          return LeaveStatusCard(leave: LeaveModel(
+                          physics: const NeverScrollableScrollPhysics(), 
+                          itemCount: leaves.length,
+                          itemBuilder: (context, index) {
+                            final leave = leaves[index];
+                            return LeaveStatusCard(leave: LeaveModel(
                                     id: leave.id,
                                     userId: leave.userId ,
                                     startDate: leave.startDate,
@@ -71,7 +72,8 @@ TextEditingController _finaldateController = TextEditingController();
 
               TextFormField(
                 controller: _reasonController,
-                decoration: const InputDecoration(labelText: 'Reason'),
+                decoration: const InputDecoration(labelText: 'Reason',
+                labelStyle: TextStyle(color: Colors.white)),
                 validator: (value) => value!.isEmpty ? 'Reason required' : null,
               ),
     const SizedBox(width: 10),
@@ -80,7 +82,8 @@ TextEditingController _finaldateController = TextEditingController();
         Expanded(
           child: TextFormField(
             controller: _dateController,
-            decoration: const InputDecoration(labelText: 'Select Date'),
+            decoration: const InputDecoration(labelText: 'Select Date',
+            labelStyle: TextStyle(color: Colors.white)),
             readOnly: true,
             onTap: () async {
               DateTime today = DateTime.now();
@@ -107,7 +110,8 @@ TextEditingController _finaldateController = TextEditingController();
         Expanded(
           child: TextFormField(
             controller: _finaldateController,
-            decoration: const InputDecoration(labelText: 'Select Date'),
+            decoration: const InputDecoration(labelText: 'Select Date',
+            labelStyle: TextStyle(color: Colors.white)),
             readOnly: true,
             onTap: () async {
               DateTime today = DateTime.now();

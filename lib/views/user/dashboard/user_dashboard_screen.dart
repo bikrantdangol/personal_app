@@ -37,6 +37,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
     final role = auth.currentUserDetail?.role ?? 'user';
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 2, 68, 150),
       appBar: AppBar(
         title: GestureDetector(
           onTap: () {

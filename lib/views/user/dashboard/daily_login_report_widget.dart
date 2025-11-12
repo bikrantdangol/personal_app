@@ -7,12 +7,24 @@ class DailyLoginReportWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vm = Provider.of<UserDashboardViewModel>(context);
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text('Attendance Records: ${vm.attendance.length} entries'),
+  final vm = Provider.of<UserDashboardViewModel>(context);
+
+  return Card(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16.0), 
+    ),
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(16.0),
       ),
-    );
-  }
+      padding: const EdgeInsets.all(16.0),
+      child: Text(
+        'Attendance Records: ${vm.attendance.length} entries',
+        style: const TextStyle(color: Colors.white, fontSize: 16),
+      ),
+    ),
+  );
+}
+
 }

@@ -55,7 +55,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       child: Column(
                         children: [
                           const Text('Total Users'),
-                          Text('${adminVM.users.length}', style: const TextStyle(fontSize: 24)),
+                          Text('${adminVM.users.length}', style: const TextStyle(fontSize: 24,)),
                         ],
                       ),
                     ),
@@ -67,8 +67,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         children: [
-                          const Text('Pending Leave Requests'),
-                          Text('${adminVM.leaveRequests.where((l) => l.status == 'pending').length}', style: const TextStyle(fontSize: 24)),
+                          const Text('Pending applicants'),
+                          Text('${adminVM.leaveRequests.where((l) => l.leave.status == 'pending').length}', style: const TextStyle(fontSize: 24)),
                         ],
                       ),
                     ),
@@ -84,7 +84,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () => Navigator.pushNamed(context, AppRoutes.leaveRequests),
-              child: Text(AppStrings.leaveRequests),  // Remove const
+              child: Text(AppStrings.leaveRequests),
             ),
           ],
         ),
