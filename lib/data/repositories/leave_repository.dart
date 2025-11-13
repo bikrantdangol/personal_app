@@ -34,21 +34,21 @@ class LeaveRepository {
   }
 
   Future<void> deleteLeaveByUserId(String userId) async {
-  try {
-    final querySnapshot = await FirebaseFirestore.instance
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
         .collection('leaves')
         .where('userId', isEqualTo: userId)
         .get();
 
-    for (var doc in querySnapshot.docs) {
-      await doc.reference.delete();
-    }
+      for (var doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
 
-    print("Deleted all leave requests for userId: $userId");
-  } catch (e) {
-    print("Error deleting leave by userId: $e");
-    rethrow;
+      print("Deleted all leave requests for userId: $userId");
+    } catch (e) {
+      print("Error deleting leave by userId: $e");
+      rethrow;
+    }
   }
-}
 
 }

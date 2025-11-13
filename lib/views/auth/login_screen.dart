@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:personal_app/core/utils/biometric_auth_service.dart';
+import 'package:personal_app/recycle/common/shared_pref.dart';
 import 'package:provider/provider.dart';
 import '../../core/utils/validators.dart';
 import '../../viewmodels/auth_view_model.dart';
@@ -15,11 +17,31 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool isSecure = true;
+  bool isBiometricEnable = false; 
+
+  final auth  = BiometricAuthService.instance;
 
   @override
   void initState() {
     super.initState();
+   
+
+   biometricCheck();
+    
+    
   }
+
+  Future<void> biometricCheck() async{
+
+    final value = SharedPrefService.getUserEmail().toString().isNotEmpty;
+    final biomtetric =await  auth.isBiometricAvailable;
+    setState(() {
+      if(value && !biomtetric){
+        isBiometricEnable = true;
+      }
+     
+    });
+  } 
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +109,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 48),
                 
-                // Login Card
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
@@ -177,6 +198,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: authVM.isLoading ? null : () async {
                             try {
                               await authVM.login(_emailController.text.trim(), _passwordController.text.trim());
+                               if(authVM.user != null){
+                                 await SharedPrefService.setUserEmail(_emailController.text.trim());
+                                 await SharedPrefService.setUserPasswordl(_passwordController.text.trim());
+
+                               }
                               if (authVM.user != null && authVM.user?.email == "dangolbikrant3@gmail.com") {
                                 Navigator.pushReplacementNamed(context, '/adminDashboard');
                               } else if (authVM.role != null && authVM.role == 'user') {
@@ -220,6 +246,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
+                ),
+                if(isBiometricEnable)
+                InkWell(
+                  onTap: ()async{
+                        if(isBiometricEnable){
+                          await authVM.login(_emailController.text.trim(), _passwordController.text.trim());
+                        }
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    
+                    
+                    child: Icon(Icons.fingerprint, size: 36,),
+                    
+                    ),
                 ),
                 
                 const SizedBox(height: 40),
