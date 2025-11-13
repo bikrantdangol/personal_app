@@ -37,19 +37,36 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
     final role = auth.currentUserDetail?.role ?? 'user';
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 2, 68, 150),
+      backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
         title: GestureDetector(
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen()));
           },
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 16,
-                child: Text(
-                  name.isNotEmpty ? name[0].toUpperCase() : 'U',
-                  style: const TextStyle(fontSize: 14),
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF4caf50), Color(0xFF2e7d32)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    name.isNotEmpty ? name[0].toUpperCase() : 'U',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -60,12 +77,16 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                     name,
                     style: const TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1a1a1a),
                     ),
                   ),
                   Text(
                     role,
-                    style: const TextStyle(fontSize: 12),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF757575),
+                    ),
                   ),
                 ],
               ),
@@ -74,13 +95,13 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout_rounded, color: Color(0xFF1a1a1a)),
             onPressed: () async {
               await auth.logout();
               Navigator.pushNamedAndRemoveUntil(
-                context, 
-                '/login', 
-                (route) => false
+                context,
+                '/login',
+                (route) => false,
               );
             },
           ),
@@ -92,14 +113,42 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
             const CalendarWidget(),
             //const LeaveBalanceWidget(),
             const DailyLoginReportWidget(),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const LeaveRequestScreen()));
-              },
-              child: const Text('Request Leave'),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const LeaveRequestScreen()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF4caf50),
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.add_circle_outline, size: 20),
+                      SizedBox(width: 8),
+                      Text(
+                        'Request Leave',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            
+            const SizedBox(height: 20),
           ],
         ),
       ),

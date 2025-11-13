@@ -28,12 +28,20 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     final adminVM = Provider.of<AdminViewModel>(context);
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 2, 68, 150),
+      backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        title: Text('${AppStrings.appName} - Admin ${AppStrings.dashboard}'),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Text(
+          '${AppStrings.appName} - Admin ${AppStrings.dashboard}',
+          style: const TextStyle(
+            color: Color(0xFF1a1a1a),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout_rounded, color: Color(0xFF1a1a1a)),
             onPressed: () async {
               await Provider.of<AuthViewModel>(context, listen: false).logout();
               Navigator.pushReplacementNamed(context, AppRoutes.login);
@@ -41,51 +49,228 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Overview',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF1a1a1a),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.grey.shade200),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFe3f2fd),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(
+                                Icons.people_rounded,
+                                color: Color(0xFF1976d2),
+                                size: 24,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Total Users',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF757575),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${adminVM.users.length}',
+                              style: const TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF1a1a1a),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.grey.shade200),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFfff8e1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(
+                                Icons.pending_actions_rounded,
+                                color: Color(0xFFf57c00),
+                                size: 24,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Pending Requests',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF757575),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${adminVM.leaveRequests.where((l) => l.leave.status == 'pending').length}',
+                              style: const TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF1a1a1a),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              const Text(
+                'Quick Actions',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF1a1a1a),
+                ),
+              ),
+              const SizedBox(height: 16),
+              _buildActionButton(
+                context,
+                icon: Icons.people_outline_rounded,
+                title: 'Manage Users',
+                subtitle: 'View and manage all users',
+                color: const Color(0xFF4caf50),
+                onTap: () => Navigator.pushNamed(context, AppRoutes.userList),
+              ),
+              const SizedBox(height: 12),
+              _buildActionButton(
+                context,
+                icon: Icons.assignment_outlined,
+                title: AppStrings.leaveRequests,
+                subtitle: 'Review leave applications',
+                color: const Color(0xFF2196f3),
+                onTap: () => Navigator.pushNamed(context, AppRoutes.leaveRequests),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.grey.shade200),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          const Text('Total Users'),
-                          Text('${adminVM.users.length}', style: const TextStyle(fontSize: 24,)),
-                        ],
-                      ),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: color, size: 28),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1a1a1a),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          const Text('Pending applicants'),
-                          Text('${adminVM.leaveRequests.where((l) => l.leave.status == 'pending').length}', style: const TextStyle(fontSize: 24)),
-                        ],
-                      ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey.shade600,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, AppRoutes.userList),
-              child: const Text('Manage Users'),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, AppRoutes.leaveRequests),
-              child: Text(AppStrings.leaveRequests),
-            ),
+            Icon(Icons.arrow_forward_ios_rounded, size: 18, color: Colors.grey.shade400),
           ],
         ),
       ),

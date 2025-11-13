@@ -16,22 +16,49 @@ class ProfileScreen extends StatelessWidget {
     final email = user?.email ?? 'email@example.com';
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        title: const Text(AppStrings.profile),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded, color: Color(0xFF1a1a1a)),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          AppStrings.profile,
+          style: TextStyle(
+            color: Color(0xFF1a1a1a),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         centerTitle: true,
       ),
-      backgroundColor: const Color.fromARGB(255, 2, 68, 150),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 70,
-                    backgroundColor: Colors.white.withOpacity(0.2),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF4caf50), Color(0xFF2e7d32)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF4caf50).withOpacity(0.3),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Center(
                     child: Text(
                       email.isNotEmpty ? email[0].toUpperCase() : 'U',
                       style: const TextStyle(
@@ -41,55 +68,104 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  const SizedBox(height: 24),
-
-                  
-                  const SizedBox(height: 10),
-                  Text(
-                    name,
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF1a1a1a),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFe3f2fd),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    role.toUpperCase(),
                     style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1976d2),
+                      letterSpacing: 0.5,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-
-                  const SizedBox(height: 10),
-                  Text(
-                    role,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white.withOpacity(0.9),
-                    ),
-                    textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.grey.shade200),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-
-                  const SizedBox(height: 10),
-                  Text(
-                    email,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white.withOpacity(0.9),
-                    ),
-                    textAlign: TextAlign.center,
+                  child: Column(
+                    children: [
+                      _buildInfoRow(Icons.email_outlined, 'Email', email),
+                      const SizedBox(height: 16),
+                      Divider(color: Colors.grey.shade200, height: 1),
+                      const SizedBox(height: 16),
+                      _buildInfoRow(Icons.badge_outlined, 'Role', role),
+                    ],
                   ),
-
-                  const SizedBox(height: 30),
-
-                  Divider(
-                    color: Colors.white.withOpacity(0.8),
-                    thickness: 1.5,
-                    indent: 60,
-                    endIndent: 60,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF5F7FA),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(icon, color: const Color(0xFF757575), size: 20),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 15,
+                  color: Color(0xFF1a1a1a),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

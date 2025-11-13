@@ -16,133 +16,206 @@ class _AddUserScreenState extends State<AddUserScreen> {
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
   String _role = 'user';
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 2, 68, 150),
+      backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        title: const Text('Add User',),
-        backgroundColor: Colors.blue
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded, color: Color(0xFF1a1a1a)),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          'Add User',
+          style: TextStyle(
+            color: Color(0xFF1a1a1a),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
-
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            width: 380,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(12),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Create New User',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF1a1a1a),
+              ),
             ),
-
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-
-                  const Text(
-                    "Add New User",
-                    style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-
-                  TextFormField(
-                    controller: _nameController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: _inputDecoration("Name"),
-                    validator: (value) => value!.isEmpty ? 'Name required' : null,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  TextFormField(
-                    controller: _emailController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: _inputDecoration("Email"),
-                    validator: (value) => value!.isEmpty ? 'Email required' : null,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  TextFormField(
-                    controller: _passwordController,
-                    style: const TextStyle(color: Colors.white),
-                    obscureText: true,
-                    decoration: _inputDecoration("Password"),
-                    validator: (value) => value!.isEmpty ? 'Password required' : null,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  DropdownButtonFormField<String>(
-                    value: _role,
-                    dropdownColor: const Color(0xFF1B2C45),
-                    decoration: _inputDecoration("Role"),
-                    items: ['user', 'admin'].map((role) =>
-                        DropdownMenuItem(
-                          value: role,
-                          child: Text(role, style: const TextStyle(color: Colors.white)),
-                        )).toList(),
-                    onChanged: (value) => setState(() => _role = value!),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  SizedBox(
-                    width: double.infinity,
-                    height: 45,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-
-                          final user = UserModel(
-                            id: DateTime.now().millisecondsSinceEpoch.toString(),
-                            email: _emailController.text,
-                            role: _role,
-                            name: _nameController.text,
-                          );
-
-                          final String password = await UserRepository()
-                              .addUser(user, _passwordController.text.trim());
-
-                          // ScaffoldMessenger.of(context).showSnackBar(
-                          //   SnackBar(content: Text("User Added\nPassword: $password")),
-                          // );
-
-                          //  Navigate to Admin Dashboard
-                          Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      ),
-                      child: const Text("Submit", style: TextStyle(fontSize: 16, color: Colors.black)),
-                    ),
+            const SizedBox(height: 8),
+            Text(
+              'Fill in the details to add a new user to the system',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade600,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.grey.shade200),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextFormField(
+                      controller: _nameController,
+                      style: const TextStyle(color: Color(0xFF1a1a1a)),
+                      decoration: _inputDecoration("Full Name", Icons.person_outline),
+                      validator: (value) => value!.isEmpty ? 'Name required' : null,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _emailController,
+                      style: const TextStyle(color: Color(0xFF1a1a1a)),
+                      decoration: _inputDecoration("Email Address", Icons.email_outlined),
+                      validator: (value) => value!.isEmpty ? 'Email required' : null,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _passwordController,
+                      style: const TextStyle(color: Color(0xFF1a1a1a)),
+                      obscureText: true,
+                      decoration: _inputDecoration("Password", Icons.lock_outline),
+                      validator: (value) => value!.isEmpty ? 'Password required' : null,
+                    ),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<String>(
+                      value: _role,
+                      decoration: _inputDecoration("User Role", Icons.admin_panel_settings_outlined),
+                      dropdownColor: Colors.white,
+                      style: const TextStyle(color: Color(0xFF1a1a1a)),
+                      items: [
+                        DropdownMenuItem(
+                          value: 'user',
+                          child: Row(
+                            children: [
+                              Icon(Icons.person, size: 18, color: Colors.grey.shade600),
+                              const SizedBox(width: 8),
+                              const Text('User'),
+                            ],
+                          ),
+                        ),
+                        DropdownMenuItem(
+                          value: 'admin',
+                          child: Row(
+                            children: [
+                              Icon(Icons.admin_panel_settings, size: 18, color: Colors.grey.shade600),
+                              const SizedBox(width: 8),
+                              const Text('Admin'),
+                            ],
+                          ),
+                        ),
+                      ],
+                      onChanged: (value) => setState(() => _role = value!),
+                    ),
+                    const SizedBox(height: 32),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: _isLoading ? null : () async {
+                          if (_formKey.currentState!.validate()) {
+                            setState(() => _isLoading = true);
+                            
+                            try {
+                              final user = UserModel(
+                                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                                email: _emailController.text,
+                                role: _role,
+                                name: _nameController.text,
+                              );
+
+                              await UserRepository().addUser(user, _passwordController.text.trim());
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("User added successfully!"),
+                                  backgroundColor: Color(0xFF4caf50),
+                                ),
+                              );
+
+                              Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Error: $e")),
+                              );
+                              setState(() => _isLoading = false);
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF4caf50),
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          disabledBackgroundColor: Colors.grey.shade300,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: _isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ),
+                              )
+                            : const Text(
+                                "Create User",
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  // 🎨 Common decoration for text fields
-  InputDecoration _inputDecoration(String label) {
+  InputDecoration _inputDecoration(String label, IconData icon) {
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(color: Colors.white70),
+      labelStyle: TextStyle(color: Colors.grey.shade600),
+      prefixIcon: Icon(icon, color: Colors.grey.shade600),
       filled: true,
-      fillColor: Colors.white.withOpacity(0.15),
+      fillColor: const Color(0xFFF5F7FA),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade200),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Color(0xFF4caf50), width: 2),
       ),
     );
   }
