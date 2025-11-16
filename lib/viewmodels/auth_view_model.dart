@@ -38,6 +38,6 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<void> logout() async {
     await _authService.signOut();
-    await LocalStorageService.clear();
+    // await LocalStorageService.clear();
   }
 }

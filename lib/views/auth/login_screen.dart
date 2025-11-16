@@ -253,6 +253,17 @@ void initState() {
                             final password = await SharedPrefService.getUserPassword();
                             if(email.isNotEmpty && password.isNotEmpty){
                               await authVM.login(email, password);
+                               if (authVM.user != null && authVM.user?.email == "dangolbikrant3@gmail.com") {
+                                Navigator.pushReplacementNamed(context, '/adminDashboard');
+                              } else if (authVM.role != null && authVM.role == 'user') {
+                                Navigator.pushReplacementNamed(context, '/userDashboard');
+                              } else if (authVM.role != null && authVM.role == 'admin') {
+                                Navigator.pushReplacementNamed(context, '/adminDashboard');
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Login failed!")),
+                                );
+                              }
 
                             }
                         }
