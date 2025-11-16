@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:personal_app/data/models/leave_model.dart';
 import 'package:personal_app/data/models/leave_with_user.dart';
 import '../data/models/user_model.dart';
 import '../data/repositories/user_repository.dart';

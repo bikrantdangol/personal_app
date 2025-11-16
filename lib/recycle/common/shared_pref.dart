@@ -5,8 +5,8 @@ class SharedPrefService {
   static const String _keyAddress = 'usr_addr';
   static const String _profileImagepath = 'usr_img';
 
-  static const String _userEmail = "useremail";
-    static const String _userPassword = "userPassword";
+  static const String _userEmail = "user_email";
+    static const String _userPassword = "user_Password";
 
 
   static Future<void> setUsername(String username) async {

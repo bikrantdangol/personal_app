@@ -21,22 +21,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final auth  = BiometricAuthService.instance;
 
-  @override
-  void initState() {
-    super.initState();
-   
-
-   biometricCheck();
-    
-    
-  }
+@override
+void initState() {
+  super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    await biometricCheck();
+  });
+}
 
   Future<void> biometricCheck() async{
-
-    final value = SharedPrefService.getUserEmail().toString().isNotEmpty;
+    final value = await SharedPrefService.getUserEmail();
+    print("this is the email $value");
     final biomtetric =await  auth.isBiometricAvailable;
     setState(() {
-      if(value && !biomtetric){
+      if(value.isNotEmpty && biomtetric){
         isBiometricEnable = true;
       }
      
@@ -58,8 +56,6 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 40),
-                
-                // Logo with modern styling
                 Container(
                   width: 100,
                   height: 100,
@@ -87,10 +83,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 32),
                 
                 const Text(
-                  "Welcome to the Devnasoft",
+                  "Welcome to the Leave Management App",
                   style: TextStyle(
                     color: Color(0xFF1a1a1a),
-                    fontSize: 28,
+                    fontSize: 24,
                     fontWeight: FontWeight.w700,
                   ),
                   textAlign: TextAlign.center,
@@ -99,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 8),
                 
                 const Text(
-                  "Login to continue to Devnasoft",
+                  "Login to continue",
                   style: TextStyle(
                     color: Color(0xFF757575),
                     fontSize: 15,
@@ -201,6 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                if(authVM.user != null){
                                  await SharedPrefService.setUserEmail(_emailController.text.trim());
                                  await SharedPrefService.setUserPasswordl(_passwordController.text.trim());
+                                 await biometricCheck();
 
                                }
                               if (authVM.user != null && authVM.user?.email == "dangolbikrant3@gmail.com") {
@@ -250,8 +247,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 if(isBiometricEnable)
                 InkWell(
                   onTap: ()async{
-                        if(isBiometricEnable){
-                          await authVM.login(_emailController.text.trim(), _passwordController.text.trim());
+                    final authenticated = await auth.authenticate();
+                        if( authenticated){
+                             final email = await SharedPrefService.getUserEmail();
+                            final password = await SharedPrefService.getUserPassword();
+                            if(email.isNotEmpty && password.isNotEmpty){
+                              await authVM.login(email, password);
+
+                            }
                         }
                   },
                   child: Container(

@@ -6,7 +6,6 @@ import '../../../viewmodels/user_dashboard_view_model.dart';
 import '../../../viewmodels/auth_view_model.dart';
 import '../../../core/services/local_storage_service.dart';
 import 'calendar_widget.dart';
-import 'leave_balance_widget.dart';
 import 'daily_login_report_widget.dart';
 
 class UserDashboardScreen extends StatefulWidget {

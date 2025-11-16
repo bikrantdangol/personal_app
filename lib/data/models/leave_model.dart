@@ -6,7 +6,7 @@ class LeaveModel {
   final DateTime startDate;
   final DateTime endDate;
   final String reason;
-  final String status; // 'pending', 'approved', 'rejected'
+  final String status;
 
   LeaveModel({
     required this.id,

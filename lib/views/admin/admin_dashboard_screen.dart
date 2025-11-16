@@ -44,7 +44,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             icon: const Icon(Icons.logout_rounded, color: Color(0xFF1a1a1a)),
             onPressed: () async {
               await Provider.of<AuthViewModel>(context, listen: false).logout();
-              Navigator.pushReplacementNamed(context, AppRoutes.login);
+              Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (route) => false,);
             },
           ),
         ],
