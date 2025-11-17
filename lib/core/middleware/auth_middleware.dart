@@ -3,21 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthMiddleware {
   static String? _cachedRole; 
-
-  /// Checks if user is logged in
+  
   static bool isLoggedIn() {
     return FirebaseAuth.instance.currentUser != null;
   }
 
-  /// Loads the role from Firestore if not loaded yet
   static Future<String?> loadUserRole() async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return null; // No user logged in
-
-    // If role is already fetched, return it
+    if (user == null) return null; 
     if (_cachedRole != null) return _cachedRole;
 
-    // Fetch role from Firestore
     try {
       final doc = await FirebaseFirestore.instance
           .collection('users')
@@ -32,12 +27,10 @@ class AuthMiddleware {
     }
   }
 
-  /// Returns stored role (after loadUserRole executed)
   static String getUserRole() {
     return _cachedRole ?? "";
   }
 
-  /// Call this on logout to clear cached role
   static Future<void> logout() async {
     _cachedRole = null;
     await FirebaseAuth.instance.signOut();

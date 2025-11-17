@@ -25,15 +25,4 @@ class ApiService {
       throw Exception("Failed to fetch users: $e");
     }
   }
-
-
-  // Future<QuerySnapshot> loginCredients( String email , String password) async {
-  //   try{
-  //     _firestore.
-
-
-  //   }catch (e){
-  //     throw Exception("There is error in Authentication");
-  //   }
-  // }
 }

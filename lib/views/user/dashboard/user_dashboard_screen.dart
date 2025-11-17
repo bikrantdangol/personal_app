@@ -6,7 +6,7 @@ import '../../../viewmodels/user_dashboard_view_model.dart';
 import '../../../viewmodels/auth_view_model.dart';
 import '../../../core/services/local_storage_service.dart';
 import 'calendar_widget.dart';
-import 'daily_login_report_widget.dart';
+//import 'daily_login_report_widget.dart';
 
 class UserDashboardScreen extends StatefulWidget {
   const UserDashboardScreen({super.key});
@@ -111,7 +111,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
           children: [
             const CalendarWidget(),
             //const LeaveBalanceWidget(),
-            const DailyLoginReportWidget(),
+            //const DailyLoginReportWidget(),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

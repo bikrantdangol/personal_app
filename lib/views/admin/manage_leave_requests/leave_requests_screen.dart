@@ -47,8 +47,6 @@ class _LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
   @override
   void initState() {
     super.initState();
-
-    // ✅ White status bar with dark icons
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.white,
       statusBarIconBrightness: Brightness.dark,
@@ -89,8 +87,6 @@ class _LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-
-            // ✅ Header section
             const Text(
               'All Leave Requests',
               style: TextStyle(
@@ -108,8 +104,6 @@ class _LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // ✅ Leave request list
             Expanded(
               child: ListView.builder(
                 itemCount: vm.leaveRequests.length,
@@ -135,7 +129,6 @@ class _LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // ✅ Left section (leave details)
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
