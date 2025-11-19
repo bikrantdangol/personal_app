@@ -35,6 +35,16 @@ class AdminViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Future<void> deleteUser(String userId) async {
+  //   try {
+  //     await _userRepo.deleteUser(userId);
+  //     await fetchUsers(); // Refresh the user list after deletion
+  //   } catch (e) {
+  //     print("Error deleting user: $e");
+  //     rethrow;
+  //   }
+  // }
+
   Future<void> loadUsers() async {
 
     notifyListeners();

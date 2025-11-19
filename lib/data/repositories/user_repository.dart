@@ -44,6 +44,24 @@ class UserRepository {
     return users;
   }
 
+  // Future<void> deleteUser(String userId) async {
+  //   try {
+  //     // Delete user document from Firestore
+  //     await _apiService.deleteDocument(
+  //       ApiEndpoints.usersCollection,
+  //       userId,
+  //     );
+      
+  //     // Note: Deleting from Firebase Auth requires admin privileges
+  //     // This will only delete from Firestore
+  //     // To delete from Firebase Auth, you need Firebase Admin SDK on backend
+      
+  //   } catch (e) {
+  //     print("Error deleting user: $e");
+  //     throw Exception("Error deleting user: $e");
+  //   }
+  // }
+
  Future<User?> loginUser(String email, String password) async {
     try {
       final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
