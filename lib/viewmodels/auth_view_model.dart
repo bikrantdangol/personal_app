@@ -36,6 +36,32 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> changePassword(String currentPassword, String newPassword) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null || user.email == null) return false;
+
+      // Re-authenticate user with current password
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: currentPassword,
+      );
+      
+      await user.reauthenticateWithCredential(credential);
+      
+      // Change password
+      await user.updatePassword(newPassword);
+      
+      return true;
+    } on FirebaseAuthException catch (e) {
+      print('Error changing password: ${e.message}');
+      return false;
+    } catch (e) {
+      print('Unexpected error: $e');
+      return false;
+    }
+  }
+
   Future<void> logout() async {
     await _authService.signOut();
   }
