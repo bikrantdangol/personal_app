@@ -17,70 +17,70 @@ class _UserListScreenState extends State<UserListScreen> {
         Provider.of<AdminViewModel>(context, listen: false).fetchUsers()
     );
   }
-//
-  // void _showDeleteConfirmation(BuildContext context, String userId, String userName) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(16),
-  //         ),
-  //         title: const Text(
-  //           'Delete User',
-  //           style: TextStyle(
-  //             fontWeight: FontWeight.w600,
-  //             color: Color(0xFF1a1a1a),
-  //           ),
-  //         ),
-  //         content: Text(
-  //           'Are you sure you want to delete $userName?',
-  //           style: TextStyle(
-  //             color: Colors.grey.shade700,
-  //           ),
-  //         ),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () => Navigator.pop(context),
-  //             child: Text(
-  //               'Cancel',
-  //               style: TextStyle(
-  //                 color: Colors.grey.shade600,
-  //                 fontWeight: FontWeight.w600,
-  //               ),
-  //             ),
-  //           ),
-  //           TextButton(
-  //             onPressed: () async {
-  //               Navigator.pop(context);
-  //               final adminVM = Provider.of<AdminViewModel>(context, listen: false);
-  //               await adminVM.deleteUser(userId);
-  //               if (context.mounted) {
-  //                 ScaffoldMessenger.of(context).showSnackBar(
-  //                   SnackBar(
-  //                     content: Text('$userName has been deleted'),
-  //                     backgroundColor: const Color(0xFF4caf50),
-  //                     behavior: SnackBarBehavior.floating,
-  //                     shape: RoundedRectangleBorder(
-  //                       borderRadius: BorderRadius.circular(8),
-  //                     ),
-  //                   ),
-  //                 );
-  //               }
-  //             },
-  //             child: const Text(
-  //               'Delete',
-  //               style: TextStyle(
-  //                 color: Colors.red,
-  //                 fontWeight: FontWeight.w600,
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+
+  void _showDeleteConfirmation(BuildContext context, String userId, String userName) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            'Delete User',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1a1a1a),
+            ),
+          ),
+          content: Text(
+            'Are you sure you want to delete $userName?',
+            style: TextStyle(
+              color: Colors.grey.shade700,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                final adminVM = Provider.of<AdminViewModel>(context, listen: false);
+                await adminVM.deleteUser(userId);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('$userName has been deleted'),
+                      backgroundColor: const Color(0xFF4caf50),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: const Text(
+                'Delete',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -274,18 +274,18 @@ class _UserListScreenState extends State<UserListScreen> {
                                   ],
                                 ),
                               ),
-                              // trailing: IconButton(
-                              //   icon: const Icon(
-                              //     Icons.delete_outline_rounded,
-                              //     color: Colors.red,
-                              //     size: 22,
-                              //   ),
-                              //   onPressed: () => _showDeleteConfirmation(
-                              //     context,
-                              //     user.id,
-                              //     user.name,
-                              //   ),
-                              // ),
+                              trailing: IconButton(
+                                icon: const Icon(
+                                  Icons.delete_outline_rounded,
+                                  color: Colors.red,
+                                  size: 22,
+                                ),
+                                onPressed: () => _showDeleteConfirmation(
+                                  context,
+                                  user.id,
+                                  user.name,
+                                ),
+                              ),
                             ),
                           );
                         },

@@ -15,13 +15,13 @@ class ApiService {
     await _firestore.collection(collection).doc(id).update(data);
   }
 
-  // Future<void> deleteDocument(String collection, String id) async {
-  //   try {
-  //     await _firestore.collection(collection).doc(id).delete();
-  //   } catch (e) {
-  //     throw Exception("Failed to delete document: $e");
-  //   }
-  // }
+  Future<void> deleteDocument(String collection, String id) async {
+    try {
+      await _firestore.collection(collection).doc(id).delete();
+    } catch (e) {
+      throw Exception("Failed to delete document: $e");
+    }
+  }
 
   Stream<QuerySnapshot> getCollectionStream(String collection) {
     return _firestore.collection(collection).snapshots();
