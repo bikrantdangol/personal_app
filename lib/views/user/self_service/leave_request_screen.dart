@@ -189,10 +189,11 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                                     setState(() {
                                       selectedInitialDate = picked;
                                       _dateController.text = "${picked.toLocal()}".split(' ')[0];
-                                      // if (selectedFinalDate != null && selectedFinalDate!.isBefore(picked)) {
-                                      //   selectedFinalDate = null;
-                                      //   _finaldateController.clear();
-                                      // }
+                                      
+                                      if (selectedFinalDate != null && selectedFinalDate!.isBefore(picked)) {
+                                        selectedFinalDate = null;
+                                        _finaldateController.clear();
+                                      }
                                     });
                                   }
                                 },
@@ -224,19 +225,19 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                                 ),
                                 readOnly: true,
                                 onTap: () async {
-                                  // if (selectedInitialDate == null) {
-                                  //   ScaffoldMessenger.of(context).showSnackBar(
-                                  //     SnackBar(
-                                  //       content: const Text('Please select start date first'),
-                                  //       backgroundColor: Colors.orange,
-                                  //       behavior: SnackBarBehavior.floating,
-                                  //       shape: RoundedRectangleBorder(
-                                  //         borderRadius: BorderRadius.circular(8),
-                                  //       ),
-                                  //     ),
-                                  //   );
-                                  //   return;
-                                  // }
+                                  if (selectedInitialDate == null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: const Text('Please select start date first'),
+                                        backgroundColor: Colors.orange,
+                                        behavior: SnackBarBehavior.floating,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                    );
+                                    return;
+                                  }
 
                                   DateTime? picked = await showDatePicker(
                                     context: context,
