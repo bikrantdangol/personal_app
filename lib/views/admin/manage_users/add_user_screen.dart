@@ -19,6 +19,14 @@ class _AddUserScreenState extends State<AddUserScreen> {
   bool _isLoading = false;
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _nameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
@@ -82,14 +90,28 @@ class _AddUserScreenState extends State<AddUserScreen> {
                       controller: _nameController,
                       style: const TextStyle(color: Color(0xFF1a1a1a)),
                       decoration: _inputDecoration("Full Name", Icons.person_outline),
-                      validator: (value) => value!.isEmpty ? 'Name required' : null,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Name required';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _emailController,
                       style: const TextStyle(color: Color(0xFF1a1a1a)),
+                      keyboardType: TextInputType.emailAddress,
                       decoration: _inputDecoration("Email Address", Icons.email_outlined),
-                      validator: (value) => value!.isEmpty ? 'Email required' : null,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Email required';
+                        }
+                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
+                          return 'Enter a valid email';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
@@ -97,7 +119,15 @@ class _AddUserScreenState extends State<AddUserScreen> {
                       style: const TextStyle(color: Color(0xFF1a1a1a)),
                       obscureText: true,
                       decoration: _inputDecoration("Password", Icons.lock_outline),
-                      validator: (value) => value!.isEmpty ? 'Password required' : null,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Password required';
+                        }
+                        if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
@@ -134,36 +164,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: _isLoading ? null : () async {
-                          if (_formKey.currentState!.validate()) {
-                            setState(() => _isLoading = true);
-                            
-                            try {
-                              final user = UserModel(
-                                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                                email: _emailController.text,
-                                role: _role,
-                                name: _nameController.text,
-                              );
-
-                              await UserRepository().addUser(user, _passwordController.text.trim());
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("User added successfully!"),
-                                  backgroundColor: Color(0xFF4caf50),
-                                ),
-                              );
-
-                              Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Error: $e")),
-                              );
-                              setState(() => _isLoading = false);
-                            }
-                          }
-                        },
+                        onPressed: _isLoading ? null : _handleCreateUser,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF4caf50),
                           foregroundColor: Colors.white,
@@ -196,6 +197,82 @@ class _AddUserScreenState extends State<AddUserScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleCreateUser() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final user = UserModel(
+        id: '', // Will be set by Firebase Auth
+        email: _emailController.text.trim(),
+        role: _role,
+        name: _nameController.text.trim(),
+      );
+
+      print("Creating user with email: ${user.email}");
+      
+      final userId = await UserRepository().addUser(user, _passwordController.text.trim());
+      
+      print("User created with ID: $userId");
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("User ${user.name} added successfully!"),
+          backgroundColor: const Color(0xFF4caf50),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      );
+
+      // Navigate back to admin dashboard
+      Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
+      
+    } on Exception catch (e) {
+      print("Exception creating user: $e");
+      
+      if (!mounted) return;
+      
+      setState(() => _isLoading = false);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      );
+    } catch (e) {
+      print("Error creating user: $e");
+      
+      if (!mounted) return;
+      
+      setState(() => _isLoading = false);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to create user: $e"),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      );
+    }
   }
 
   InputDecoration _inputDecoration(String label, IconData icon) {
